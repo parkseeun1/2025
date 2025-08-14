@@ -40,42 +40,67 @@ mbti_descriptions = {
     "ENTJ": "결단력 있고 논리적이며 목표 지향적이고 타고난 리더입니다."
 }
 
+# --- MBTI별 이미지 파일 경로 정의 ---
+# 'images/' 폴더 안에 각 MBTI 유형의 이미지 파일이 있다고 가정합니다.
+# 예를 들어, 'images/ISTJ.png', 'images/ISFJ.png' 등으로 준비해주세요.
+mbti_image_paths = {
+    "ISTJ": "images/ISTJ.png",
+    "ISFJ": "images/ISFJ.png",
+    "INFJ": "images/INFJ.png",
+    "INTJ": "images/INTJ.png",
+    "ISTP": "images/ISTP.png",
+    "ISFP": "images/ISFP.png",
+    "INFP": "images/INFP.png",
+    "INTP": "images/INTP.png",
+    "ESTP": "images/ESTP.png",
+    "ESFP": "images/ESFP.png",
+    "ENFP": "images/ENFP.png",
+    "ENTP": "images/ENTP.png",
+    "ESTJ": "images/ESTJ.png",
+    "ESFJ": "images/ESFJ.png",
+    "ENFJ": "images/ENFJ.png",
+    "ENTJ": "images/ENTJ.png",
+    # 여기에 없는 MBTI에 대한 기본 이미지나 에러 이미지를 추가할 수 있습니다.
+    "default": "images/default_mbti.png" # MBTI 이미지가 없을 때 보여줄 기본 이미지
+}
+
 
 # --- 2. Streamlit 웹 앱 레이아웃 설정 ---
 
 st.set_page_config(
-    page_title="🌈 MBTI 성격 유형별 맞춤 진로 가이드 📚", # 웹 브라우저 탭 제목
-    page_icon="✨", # 웹 브라우저 탭 아이콘
-    layout="centered" # 페이지 레이아웃을 중앙 정렬
+    page_title="🌈 MBTI 성격 유형별 맞춤 진로 가이드 📚",
+    page_icon="✨",
+    layout="centered"
 )
 
-# 상단 배너 이미지 (이미지 파일 경로를 여기에 넣어주세요! 예: "images/banner.png")
-# 이미지 파일이 현재 스크립트 파일과 같은 폴더에 있다면 파일 이름만 적으셔도 됩니다.
-# st.image("banner_image.jpg", use_column_width=True) # 적절한 이미지가 있다면 주석 해제하고 사용하세요.
-st.image("https://images.unsplash.com/photo-1543269865-cbf427311029?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", use_column_width=True, caption="나의 재능과 열정을 찾아 떠나는 진로 여행!") # 예시 이미지 URL
+# 상단 배너 이미지 (이 부분은 이전 코드와 동일하게 유지)
+# 실제 이미지 파일이나 Unsplash URL을 사용하세요.
+st.image("https://images.unsplash.com/photo-1543269865-cbf427311029?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", use_column_width=True, caption="나의 재능과 열정을 찾아 떠나는 진로 여행! 🌟")
 
 st.title("💖 MBTI 성격 유형별 맞춤 진로 가이드 📖")
 st.write("나의 MBTI 유형을 선택하고, 숨겨진 나의 잠재력을 발견해봐요! ✨")
-st.markdown("---") # 구분선
+st.markdown("---")
 
 # MBTI 유형 드롭다운 목록
-mbti_types = sorted(list(mbti_career_map.keys())) # MBTI 유형을 알파벳 순으로 정렬
+mbti_types = sorted(list(mbti_career_map.keys()))
 
 # 사용자에게 MBTI 유형 선택받기
 selected_mbti = st.selectbox(
-    "🧐 **나의 MBTI 유형은 무엇인가요?**", # Selectbox 제목
+    "🧐 **나의 MBTI 유형은 무엇인가요?**",
     mbti_types,
-    index=None, # 초기 선택 없음
-    placeholder="👇 여기에 당신의 MBTI를 선택해주세요! 😊" # 힌트 텍스트
+    index=None,
+    placeholder="👇 여기에 당신의 MBTI를 선택해주세요! 😊"
 )
 
-st.markdown("---") # 구분선
+st.markdown("---")
 
 # '직업 추천 받기' 버튼
 if st.button("🌟 직업 추천 받기! 나에게 딱 맞는 길은? 🚀", use_container_width=True):
     if selected_mbti:
-        recommended_careers = mbti_career_map.get(selected_mbti, ["추천할 직업 정보를 찾을 수 없습니다."])
-        
+        # --- 선택된 MBTI에 맞는 이미지 표시 ---
+        image_to_display = mbti_image_paths.get(selected_mbti, mbti_image_paths["default"])
+        st.image(image_to_display, width=200, caption=f"✨ 당신의 MBTI는 {selected_mbti}!") # 이미지 크기 조절 가능
+
         st.subheader(f"✅ **{selected_mbti}** 유형을 위한 추천 직업들이에요! 🎉")
         
         # MBTI 특징 설명 부분을 expander로 깔끔하게 정리
@@ -84,14 +109,15 @@ if st.button("🌟 직업 추천 받기! 나에게 딱 맞는 길은? 🚀", use
         
         st.success("👇 아래 직업들을 살펴보시고, 당신의 꿈을 키워나가세요! 💡")
         
+        recommended_careers = mbti_career_map.get(selected_mbti, ["추천할 직업 정보를 찾을 수 없습니다."])
         # 추천 직업 리스트 출력
         for i, career in enumerate(recommended_careers):
             st.write(f"**{i+1}. {career}**")
             
-        st.markdown("<br>", unsafe_allow_html=True) # 공백 라인 추가
+        st.markdown("<br>", unsafe_allow_html=True)
         st.warning("⚠️ **주의사항**: 이 추천은 일반적인 경향성을 기반으로 합니다. 모든 정보는 참고용이며, 가장 중요한 것은 **당신의 진정한 흥미와 재능**이라는 것을 잊지 마세요! ")
     else:
         st.error("🚨 잠시만요! MBTI 유형을 먼저 선택해주셔야 추천해 드릴 수 있어요. 위에서 MBTI를 골라주세요! 🙏")
 
-st.markdown("---") # 하단 구분선
-st.caption("©️ 2025 MBTI 진로 가이드 by 감자") # 저작권 표시 (재미로 추가해봤어요!)
+st.markdown("---")
+st.caption("©️ 2025 MBTI 진로 가이드 by 감자")
